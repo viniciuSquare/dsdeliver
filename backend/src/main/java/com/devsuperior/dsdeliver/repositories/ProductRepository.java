@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.devsuperior.dsdeliver.entities.Product;
 
-//CRUD JPA to manipulate entity
+//JPA CRUD to manipulate entity
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
-	//Spring data JPA query default mehtod, ordering by name	
+	//Spring data JPA query default method, ordering by name	
 	List<Product> findAllByOrderByNameAsc();
 
 }

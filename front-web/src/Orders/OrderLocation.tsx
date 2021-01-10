@@ -1,8 +1,9 @@
 
 import { useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import AsyncSelect from 'react-select'
+import AsyncSelect from 'react-select/async'
 import { fetchLocalMapBox } from '../api'
+import { OrderLocationData } from './types'
 
 const initialPosition = {
     lat: 51.505,
@@ -17,10 +18,15 @@ type Place = {
         lat: number;
         lng: number;
     }
+}
+
+type Props = {
+    onChangeLocation: (location: OrderLocationData) => void;
 
 }
 
-function OrderLocation(){
+
+function OrderLocation({onChangeLocation}: Props){
     const[address, setAddress] = useState<Place>({
         position: initialPosition
     })
@@ -48,11 +54,11 @@ function OrderLocation(){
     //when an address is seleted, it's shown in the map 
     const handleChangeSelect = (place: Place) => {
         setAddress(place);
-        // onChangeLocation({
-        //     latitude: place.position.lat,
-        //     longitude: place.position.lng,
-        //     address: place.label!
-        // });
+        onChangeLocation({
+            latitude: place.position.lat,
+            longitude: place.position.lng,
+            address: place.label!
+        });
     };
 
     return(
@@ -73,7 +79,8 @@ function OrderLocation(){
                 {/* Initial Map position, zoom level, zoom with wheel */}
                 <MapContainer 
                     center={address.position} 
-                    zoom={13} 
+                    zoom={19} 
+                    key={address.position.lat}
                     scrollWheelZoom={false}>
 
                     <TileLayer
@@ -81,8 +88,10 @@ function OrderLocation(){
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     <Marker position={address.position}>
+                    
+                    {/* Label on map marker */}
                     <Popup>
-                        Minha casa
+                        {address.label}
                     </Popup>
                     </Marker>
                 </MapContainer>
